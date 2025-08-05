@@ -4,6 +4,141 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <div class="main-container">
+      <div class="container">
+        <div class="display-container">
+          <div class="upper-display" id="upperDisplay">0</div>
+          <div class="display" id="display">0</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">DEG</div>
+          <div class="container-column">F-E</div>
+          <div class="container-column blank-cell"></div>
+          <div class="container-column blank-cell"></div>
+          <div class="container-column">
+            <ion-icon name="backspace-outline" class="clear-icon"></ion-icon>
+          </div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">MC</div>
+          <div class="container-column">MR</div>
+          <div class="container-column">M+</div>
+          <div class="container-column">M-</div>
+          <div class="container-column">MS</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column extra-funcions">Trignomatry</div>
+          <div class="container-column extra-funcions">Function</div>
+          <div class="container-column blank-cell"></div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">2ⁿᵈ</div>
+          <div class="container-column">π</div>
+          <div class="container-column extra-funcions blank-cell">
+            <div class="sub-columns hidden-cells">
+              <div class="sub-column">|x|</div>
+              <div class="sub-column">floor</div>
+              <div class="sub-column">cell</div>
+            </div>
+            <div class="sub-columns hidden-cells">
+              <div class="sub-column">rand</div>
+              <div class="sub-column">dms</div>
+              <div class="sub-column">deg</div>
+            </div>
+          </div>
+          <div class="container-column">AC</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">x²</div>
+          <div class="container-column">1/x</div>
+          <div class="container-column">|x|</div>
+          <div class="container-column">exp</div>
+          <div class="container-column">%</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">²√x</div>
+          <div class="container-column">(</div>
+          <div class="container-column">)</div>
+          <div class="container-column">n!</div>
+          <div class="container-column">/</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">xʸ</div>
+          <div class="container-column digit">7</div>
+          <div class="container-column digit">8</div>
+          <div class="container-column digit">9</div>
+          <div class="container-column">*</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">10ˣ</div>
+          <div class="container-column digit">4</div>
+          <div class="container-column digit">5</div>
+          <div class="container-column digit">6</div>
+          <div class="container-column">-</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">log</div>
+          <div class="container-column digit">1</div>
+          <div class="container-column digit">2</div>
+          <div class="container-column digit">3</div>
+          <div class="container-column">+</div>
+        </div>
+        <div class="container-row">
+          <div class="container-column">In</div>
+          <div class="container-column">+/-</div>
+          <div class="container-column digit">0</div>
+          <div class="container-column">.</div>
+          <div class="container-column equal">=</div>
+        </div>
+        <!-- Trigonometry Dropdown Panel -->
+        <div id="trig-panel" class="function-panel hidden-panel">
+          <div class="panel-row">
+            <div class="panel-button">2ⁿᵈ</div>
+            <div class="panel-button">sin</div>
+            <div class="panel-button">cos</div>
+            <div class="panel-button">tan</div>
+          </div>
+          <div class="panel-row">
+            <div class="panel-button">hyp</div>
+            <div class="panel-button">sec</div>
+            <div class="panel-button">csc</div>
+            <div class="panel-button">cot</div>
+          </div>
+        </div>
+
+        <!-- Function Dropdown Panel -->
+        <div id="func-panel" class="function-panel hidden-panel">
+          <div class="panel-row">
+            <div class="panel-button">|x|</div>
+            <div class="panel-button">⌊x⌋</div>
+            <div class="panel-button">⌈x⌉</div>
+          </div>
+          <div class="panel-row">
+            <div class="panel-button">rand</div>
+            <div class="panel-button">→dms</div>
+            <div class="panel-button">→deg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
 </html>
