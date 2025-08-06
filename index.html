@@ -29,112 +29,120 @@
           <div class="display" id="display">0</div>
         </div>
         <div class="container-row">
-          <div class="container-column">DEG</div>
-          <div class="container-column">F-E</div>
+          <div class="container-column" id="DEG">DEG</div>
+          <div class="container-column" id="F-E">F-E</div>
           <div class="container-column blank-cell"></div>
           <div class="container-column blank-cell"></div>
           <div class="container-column">
-            <ion-icon name="backspace-outline" class="clear-icon"></ion-icon>
+            <ion-icon
+              name="backspace-outline"
+              class="clear-icon"
+              id="clear"
+            ></ion-icon>
           </div>
         </div>
         <div class="container-row">
-          <div class="container-column">MC</div>
-          <div class="container-column">MR</div>
-          <div class="container-column">M+</div>
-          <div class="container-column">M-</div>
-          <div class="container-column">MS</div>
+          <div class="container-column" id="MC">MC</div>
+          <div class="container-column" id="MR">MR</div>
+          <div class="container-column" id="M+">M+</div>
+          <div class="container-column" id="M-">M-</div>
+          <div class="container-column" id="MS">MS</div>
         </div>
         <div class="container-row">
-          <div class="container-column extra-funcions">Trignomatry</div>
-          <div class="container-column extra-funcions">Function</div>
+          <div class="container-column extra-funcions" id="Trignomatry">
+            Trignomatry
+          </div>
+          <div class="container-column extra-funcions" id="Function">
+            Function
+          </div>
           <div class="container-column blank-cell"></div>
         </div>
         <div class="container-row">
-          <div class="container-column">2ⁿᵈ</div>
-          <div class="container-column">π</div>
+          <div class="container-column" id="2nd">2ⁿᵈ</div>
+          <div class="container-column" id="pie">π</div>
           <div class="container-column extra-funcions blank-cell">
             <div class="sub-columns hidden-cells">
-              <div class="sub-column">|x|</div>
-              <div class="sub-column">floor</div>
-              <div class="sub-column">cell</div>
+              <div class="sub-column" id="|x|">|x|</div>
+              <div class="sub-column" id="floor">floor</div>
+              <div class="sub-column" id="cell">cell</div>
             </div>
             <div class="sub-columns hidden-cells">
-              <div class="sub-column">rand</div>
-              <div class="sub-column">dms</div>
-              <div class="sub-column">deg</div>
+              <div class="sub-column" id="rand">rand</div>
+              <div class="sub-column" id="dms">dms</div>
+              <div class="sub-column" id="deg">deg</div>
             </div>
           </div>
-          <div class="container-column">AC</div>
+          <div class="container-column" id="AC">AC</div>
         </div>
         <div class="container-row">
-          <div class="container-column">x²</div>
-          <div class="container-column">1/x</div>
-          <div class="container-column">|x|</div>
-          <div class="container-column">exp</div>
-          <div class="container-column">%</div>
+          <div class="container-column" id="X^2">x²</div>
+          <div class="container-column" id="1/x">1/x</div>
+          <div class="container-column" id="|X|">|x|</div>
+          <div class="container-column" id="exp">exp</div>
+          <div class="container-column" id="%">%</div>
         </div>
         <div class="container-row">
-          <div class="container-column">²√x</div>
-          <div class="container-column">(</div>
-          <div class="container-column">)</div>
-          <div class="container-column">n!</div>
-          <div class="container-column">/</div>
+          <div class="container-column" id="sqrt">²√x</div>
+          <div class="container-column" id="(">(</div>
+          <div class="container-column" id=")">)</div>
+          <div class="container-column" id="n!">n!</div>
+          <div class="container-column" id="/">/</div>
         </div>
         <div class="container-row">
-          <div class="container-column">xʸ</div>
-          <div class="container-column digit">7</div>
-          <div class="container-column digit">8</div>
-          <div class="container-column digit">9</div>
-          <div class="container-column">*</div>
+          <div class="container-column" id="x^y">xʸ</div>
+          <div class="container-column digit" id="7">7</div>
+          <div class="container-column digit" id="8">8</div>
+          <div class="container-column digit" id="9">9</div>
+          <div class="container-column" id="*">*</div>
         </div>
         <div class="container-row">
-          <div class="container-column">10ˣ</div>
-          <div class="container-column digit">4</div>
-          <div class="container-column digit">5</div>
-          <div class="container-column digit">6</div>
-          <div class="container-column">-</div>
+          <div class="container-column" id="10^X">10ˣ</div>
+          <div class="container-column digit" id="4">4</div>
+          <div class="container-column digit" id="5">5</div>
+          <div class="container-column digit" id="6">6</div>
+          <div class="container-column" id="-">-</div>
         </div>
         <div class="container-row">
-          <div class="container-column">log</div>
-          <div class="container-column digit">1</div>
-          <div class="container-column digit">2</div>
-          <div class="container-column digit">3</div>
-          <div class="container-column">+</div>
+          <div class="container-column" id="log">log</div>
+          <div class="container-column digit" id="1">1</div>
+          <div class="container-column digit" id="2">2</div>
+          <div class="container-column digit" id="3">3</div>
+          <div class="container-column" id="+">+</div>
         </div>
         <div class="container-row">
-          <div class="container-column">In</div>
-          <div class="container-column">+/-</div>
-          <div class="container-column digit">0</div>
-          <div class="container-column">.</div>
-          <div class="container-column equal">=</div>
+          <div class="container-column" id="In">In</div>
+          <div class="container-column" id="+/-">+/-</div>
+          <div class="container-column digit" id="0">0</div>
+          <div class="container-column" id=".">.</div>
+          <div class="container-column equal" id="=">=</div>
         </div>
         <!-- Trigonometry Dropdown Panel -->
         <div id="trig-panel" class="function-panel hidden-panel">
           <div class="panel-row">
-            <div class="panel-button">2ⁿᵈ</div>
-            <div class="panel-button">sin</div>
-            <div class="panel-button">cos</div>
-            <div class="panel-button">tan</div>
+            <div class="panel-button" id="2nd-trg">2ⁿᵈ</div>
+            <div class="panel-button" id="sin">sin</div>
+            <div class="panel-button" id="cos">cos</div>
+            <div class="panel-button" id="tan">tan</div>
           </div>
           <div class="panel-row">
-            <div class="panel-button">hyp</div>
-            <div class="panel-button">sec</div>
-            <div class="panel-button">csc</div>
-            <div class="panel-button">cot</div>
+            <div class="panel-button" id="hyp">hyp</div>
+            <div class="panel-button" id="sec">sec</div>
+            <div class="panel-button" id="csc">csc</div>
+            <div class="panel-button" id="cot">cot</div>
           </div>
         </div>
 
         <!-- Function Dropdown Panel -->
         <div id="func-panel" class="function-panel hidden-panel">
           <div class="panel-row">
-            <div class="panel-button">|x|</div>
-            <div class="panel-button">⌊x⌋</div>
-            <div class="panel-button">⌈x⌉</div>
+            <div class="panel-button" id="|x|">|x|</div>
+            <div class="panel-button" id="floor">⌊x⌋</div>
+            <div class="panel-button" id="ceil">⌈x⌉</div>
           </div>
           <div class="panel-row">
-            <div class="panel-button">rand</div>
-            <div class="panel-button">→dms</div>
-            <div class="panel-button">→deg</div>
+            <div class="panel-button" id="rand">rand</div>
+            <div class="panel-button" id="dms">→dms</div>
+            <div class="panel-button" id="deg">→deg</div>
           </div>
         </div>
       </div>
