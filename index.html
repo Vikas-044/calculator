@@ -3,150 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator</title>
-
+    <title>CALCULATOR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
       rel="stylesheet"
     />
-
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="main-container">
-      <div class="container">
-        <div class="display-container">
-          <div class="upper-display" id="upperDisplay">0</div>
-          <div class="display" id="display">0</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="DEG">DEG</div>
-          <div class="container-column" id="F-E">F-E</div>
-          <div class="container-column blank-cell"></div>
-          <div class="container-column blank-cell"></div>
-          <div class="container-column">
-            <ion-icon
-              name="backspace-outline"
-              class="clear-icon"
-              id="clear"
-            ></ion-icon>
-          </div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="MC">MC</div>
-          <div class="container-column" id="MR">MR</div>
-          <div class="container-column" id="M+">M+</div>
-          <div class="container-column" id="M-">M-</div>
-          <div class="container-column" id="MS">MS</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column extra-funcions" id="Trignomatry">
-            Trignomatry
-          </div>
-          <div class="container-column extra-funcions" id="Function">
-            Function
-          </div>
-          <div class="container-column blank-cell"></div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="2nd">2ⁿᵈ</div>
-          <div class="container-column" id="pie">π</div>
-          <div class="container-column extra-funcions blank-cell">
-            <div class="sub-columns hidden-cells">
-              <div class="sub-column" id="|x|">|x|</div>
-              <div class="sub-column" id="floor">floor</div>
-              <div class="sub-column" id="cell">cell</div>
-            </div>
-            <div class="sub-columns hidden-cells">
-              <div class="sub-column" id="rand">rand</div>
-              <div class="sub-column" id="dms">dms</div>
-              <div class="sub-column" id="deg">deg</div>
+    <div class="container">
+      <div class="calculator">
+        <div class="display">
+          <div class="history">
+            <div class="history-item">
+              <span class="history-item-text">0</span>
             </div>
           </div>
-          <div class="container-column" id="AC">AC</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="X^2">x²</div>
-          <div class="container-column" id="1/x">1/x</div>
-          <div class="container-column" id="|X|">|x|</div>
-          <div class="container-column" id="exp">exp</div>
-          <div class="container-column" id="%">%</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="sqrt">²√x</div>
-          <div class="container-column" id="(">(</div>
-          <div class="container-column" id=")">)</div>
-          <div class="container-column" id="n!">n!</div>
-          <div class="container-column" id="/">/</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="x^y">xʸ</div>
-          <div class="container-column digit" id="7">7</div>
-          <div class="container-column digit" id="8">8</div>
-          <div class="container-column digit" id="9">9</div>
-          <div class="container-column" id="*">*</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="10^X">10ˣ</div>
-          <div class="container-column digit" id="4">4</div>
-          <div class="container-column digit" id="5">5</div>
-          <div class="container-column digit" id="6">6</div>
-          <div class="container-column" id="-">-</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="log">log</div>
-          <div class="container-column digit" id="1">1</div>
-          <div class="container-column digit" id="2">2</div>
-          <div class="container-column digit" id="3">3</div>
-          <div class="container-column" id="+">+</div>
-        </div>
-        <div class="container-row">
-          <div class="container-column" id="In">In</div>
-          <div class="container-column" id="+/-">+/-</div>
-          <div class="container-column digit" id="0">0</div>
-          <div class="container-column" id=".">.</div>
-          <div class="container-column equal" id="=">=</div>
-        </div>
-        <!-- Trigonometry Dropdown Panel -->
-        <div id="trig-panel" class="function-panel hidden-panel">
-          <div class="panel-row">
-            <div class="panel-button" id="2nd-trg">2ⁿᵈ</div>
-            <div class="panel-button" id="sin">sin</div>
-            <div class="panel-button" id="cos">cos</div>
-            <div class="panel-button" id="tan">tan</div>
-          </div>
-          <div class="panel-row">
-            <div class="panel-button" id="hyp">hyp</div>
-            <div class="panel-button" id="sec">sec</div>
-            <div class="panel-button" id="csc">csc</div>
-            <div class="panel-button" id="cot">cot</div>
-          </div>
+          <input type="text" id="display" placeholder="0" />
         </div>
 
-        <!-- Function Dropdown Panel -->
-        <div id="func-panel" class="function-panel hidden-panel">
-          <div class="panel-row">
-            <div class="panel-button" id="|x|">|x|</div>
-            <div class="panel-button" id="floor">⌊x⌋</div>
-            <div class="panel-button" id="ceil">⌈x⌉</div>
-          </div>
-          <div class="panel-row">
-            <div class="panel-button" id="rand">rand</div>
-            <div class="panel-button" id="dms">→dms</div>
-            <div class="panel-button" id="deg">→deg</div>
-          </div>
+        <div class="buttons">
+          <button class="button">DEG</button>
+          <button class="button">F-E</button>
+          <button class="button btn--double blank"></button>
+          <button class="button clear-one">CE</button>
+          <button class="button">MC</button>
+          <button class="button">MR</button>
+          <button class="button">M+</button>
+          <button class="button">M-</button>
+          <button class="button">MS</button>
+          <button class="button btn--double" id="trig-btn">Trignometry</button>
+          <button class="button btn--double" id="func-btn">Function</button>
+          <button class="button blank"></button>
+          <button class="button changeNames">2ⁿᵜ</button>
+          <button class="button func">π</button>
+          <button class="button btn--double blank"></button>
+          <button class="button clear-all">AC</button>
+          <button class="button func special">x²</button>
+          <button class="button func">1/x</button>
+          <button class="button func">|x|</button>
+          <button class="button func">e</button>
+          <button class="button func">%</button>
+          <button class="button func special">²√x</button>
+          <button class="button operator">(</button>
+          <button class="button operator">)</button>
+          <button class="button func">n!</button>
+          <button class="button operator">/</button>
+          <button class="button func special">xʸ</button>
+          <button class="button digits">7</button>
+          <button class="button digits">8</button>
+          <button class="button digits">9</button>
+          <button class="button operator">*</button>
+          <button class="button func special">10ˣ</button>
+          <button class="button digits">4</button>
+          <button class="button digits">5</button>
+          <button class="button digits">6</button>
+          <button class="button operator">-</button>
+          <button class="button func special">log</button>
+          <button class="button digits">1</button>
+          <button class="button digits">2</button>
+          <button class="button digits">3</button>
+          <button class="button operator">+</button>
+          <button class="button func special">ln</button>
+          <button class="button func">±</button>
+          <button class="button digits">0</button>
+          <button class="button">.</button>
+          <button class="button equal">=</button>
+        </div>
+
+        <!-- Trigonometry Popup Panel -->
+        <div id="trig-panel" class="popup-panel hidden">
+          <button class="popup-btn">sin</button>
+          <button class="popup-btn">cos</button>
+          <button class="popup-btn">tan</button>
+          <button class="popup-btn">csc</button>
+          <button class="popup-btn">sec</button>
+          <button class="popup-btn">cot</button>
+        </div>
+
+        <!-- Function Popup Panel -->
+        <div id="func-panel" class="popup-panel hidden">
+          <button class="popup-btn">sinh</button>
+          <button class="popup-btn">cosh</button>
+          <button class="popup-btn">tanh</button>
+          <button class="popup-btn">asinh</button>
+          <button class="popup-btn">acosh</button>
+          <button class="popup-btn">atanh</button>
         </div>
       </div>
     </div>
+
+    <script>
+      const toggleBtn = document.querySelector(".toggle-theme");
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+      });
+    </script>
     <script src="app.js"></script>
   </body>
 </html>
