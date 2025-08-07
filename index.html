@@ -25,7 +25,7 @@
         </div>
 
         <div class="buttons">
-          <button class="button">DEG</button>
+          <button class="button DEG">DEG</button>
           <button class="button">F-E</button>
           <button class="button btn--double blank"></button>
           <button class="button clear-one">CE</button>
@@ -37,7 +37,7 @@
           <button class="button btn--double" id="trig-btn">Trignometry</button>
           <button class="button btn--double" id="func-btn">Function</button>
           <button class="button blank"></button>
-          <button class="button changeNames">2ⁿᵜ</button>
+          <button class="button changeNames">2ⁿᵈ</button>
           <button class="button func">π</button>
           <button class="button btn--double blank"></button>
           <button class="button clear-all">AC</button>
@@ -75,32 +75,25 @@
 
         <!-- Trigonometry Popup Panel -->
         <div id="trig-panel" class="popup-panel hidden">
-          <button class="popup-btn">sin</button>
-          <button class="popup-btn">cos</button>
-          <button class="popup-btn">tan</button>
-          <button class="popup-btn">csc</button>
-          <button class="popup-btn">sec</button>
-          <button class="popup-btn">cot</button>
+          <button class="popup-btn button">sin</button>
+          <button class="popup-btn button">cos</button>
+          <button class="popup-btn button">tan</button>
+          <button class="popup-btn button">sinh</button>
+          <button class="popup-btn button">cosh</button>
+          <button class="popup-btn button">tanh</button>
         </div>
 
         <!-- Function Popup Panel -->
         <div id="func-panel" class="popup-panel hidden">
-          <button class="popup-btn">sinh</button>
-          <button class="popup-btn">cosh</button>
-          <button class="popup-btn">tanh</button>
-          <button class="popup-btn">asinh</button>
-          <button class="popup-btn">acosh</button>
-          <button class="popup-btn">atanh</button>
+          <button class="popup-btn button">|x|</button>
+          <button class="popup-btn button">⌈x⌉</button>
+          <button class="popup-btn button">⌊x⌋</button>
+          <button class="popup-btn button">rand</button>
+          <button class="popup-btn button">→dms</button>
+          <!-- <button class="popup-btn">atanh</button> -->
         </div>
       </div>
     </div>
-
-    <script>
-      const toggleBtn = document.querySelector(".toggle-theme");
-      toggleBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-      });
-    </script>
     <script src="app.js"></script>
   </body>
 </html>

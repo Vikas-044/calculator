@@ -35,7 +35,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Close panels on other button clicks
   document.querySelectorAll(".button").forEach((btn) => {
     if (btn !== trigBtn && btn !== funcBtn) {
       btn.addEventListener("click", () => {
@@ -45,7 +44,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Close panels when clicking outside
   document.addEventListener("click", (e) => {
     if (
       !e.target.closest("#trig-panel") &&
@@ -69,9 +67,11 @@ class Calculator {
     this.isChangeNames = false;
     this.maxFact = 170;
     document.addEventListener("keydown", (e) => this.handleKey(e));
-    this.oldBtnName = ["x²", "²√x", "xʸ", "10ˣ", "Log", "Ln"];
-    this.newBtnName = ["x³", "³√x", "ʸ√x", "2ˣ", "logᵧx", "eˣ"];
+    this.oldBtnName = ["x²", "²√x", "xʸ", "10ˣ", "log", "ln"];
+    this.newBtnName = ["x³", "³√x", "ʸ√x", "2ˣ", "logᵤx", "eˣ"];
     this.changeBtnName = document.querySelectorAll(".special");
+    this.changeDegName = document.querySelector(".DEG");
+    this.isRad = false;
   }
 
   updateDisplay(text = "") {
@@ -83,7 +83,7 @@ class Calculator {
 
   append(char) {
     const last = this.expression.slice(-1);
-    if (/[+\-*/^.]/.test(last) && /[+\-*/^.]/.test(char)) {
+    if (/[+\-*/^\.]/.test(last) && /[+\-*/^\.]/.test(char)) {
       if (char !== last) {
         this.expression = this.expression.slice(0, -1) + char;
         this.updateDisplay(this.expression);
@@ -91,17 +91,36 @@ class Calculator {
       }
       return;
     }
+
     if (char === "." && /\.\d*$/.test(this.expression)) return;
     if (char === "0" && this.displayEl.value === "") return;
-    if (last === ")" && !/[+\-*/^.)%]/.test(char)) {
-      // Check if the last pair of brackets is empty: look for '()' at the end
-      if (this.expression.endsWith("()")) {
-        this.expression = this.expression.slice(0, -2) + "(0)";
+
+    if (char === "(") {
+      if (/[0-9%)πe]$/.test(last)) {
+        this.expression += "*";
       }
-      this.expression += "*";
+      this.expression += "(";
+    } else if (char === ")") {
+      const openCount = (this.expression.match(/\(/g) || []).length;
+      const closeCount = (this.expression.match(/\)/g) || []).length;
+      if (openCount > closeCount) {
+        if (this.expression.endsWith("()")) {
+          this.expression = this.expression.slice(0, -2) + "(0)";
+        } else {
+          this.expression = this.expression.replace(/\(\)/g, "(0)");
+        }
+        this.expression += ")";
+      }
+    } else {
+      if (last === ")" && !/[+\-*/^.)%]/.test(char)) {
+        if (this.expression.endsWith("()")) {
+          this.expression = this.expression.slice(0, -2) + "(0)";
+        }
+        this.expression += "*";
+      }
+      this.expression += char;
     }
 
-    this.expression += char;
     if (
       this.displayEl.value.includes("%") ||
       this.displayEl.value.includes("^")
@@ -112,11 +131,12 @@ class Calculator {
 
   calcFact(num) {
     let ans = 1;
-    while (num > 1) {
-      ans *= num;
-      num--;
-    }
+    while (num > 1) ans *= num--;
     return ans;
+  }
+
+  toRadians(deg) {
+    return (deg * Math.PI) / 180;
   }
 
   applyFunction(func) {
@@ -148,9 +168,7 @@ class Calculator {
           this.expression += "**";
           return;
         case "10ˣ":
-          this.expression = this.expression
-            ? (this.expression += "**10")
-            : "10**";
+          this.expression = this.expression ? this.expression + "**10" : "10**";
           this.updateDisplay(this.expression);
           return;
         case "|x|":
@@ -185,27 +203,158 @@ class Calculator {
         case "2ⁿᵈ":
           this.isChangeNames = true;
           if (this.changeBtnName[0].textContent === "x²") {
-            this.changeBtnName.forEach((btn, i) => {
-              btn.textContent = this.newBtnName[i];
-            });
+            this.changeBtnName.forEach(
+              (btn, i) => (btn.textContent = this.newBtnName[i])
+            );
           } else {
-            this.changeBtnName.forEach((btn, i) => {
-              btn.textContent = this.oldBtnName[i];
-            });
+            this.changeBtnName.forEach(
+              (btn, i) => (btn.textContent = this.oldBtnName[i])
+            );
+          }
+          return;
+        case "DEG":
+          this.changeDegName.textContent = "RAD";
+          this.isRad = true;
+          break;
+        case "RAD":
+          this.changeDegName.textContent = "DEG";
+          this.isRad = false;
+          break;
+        case "sin": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.sin(angle);
+          fn = this.isRad ? `sin(${input}ᶜ)` : `sin(${input}°)`;
+          break;
+        }
+        case "cos": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.cos(angle);
+          fn = this.isRad ? `cos(${input}ᶜ)` : `cos(${input}°)`;
+          break;
+        }
+        case "tan": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.tan(angle);
+          fn = this.isRad ? `tan(${input}ᶜ)` : `tan(${input}°)`;
+          break;
+        }
+        case "sinh": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.sinh(angle);
+          fn = this.isRad ? `sinh(${input}ᶜ)` : `sinh(${input}°)`;
+          break;
+        }
+        case "cosh": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.cosh(angle);
+          fn = this.isRad ? `cosh(${input}ᶜ)` : `cosh(${input}°)`;
+          break;
+        }
+        case "tanh": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const angle = this.isRad ? input : this.toRadians(input);
+          result = Math.tanh(angle);
+          fn = this.isRad ? `tanh(${input}ᶜ)` : `tanh(${input}°)`;
+          break;
+        }
+        case "⌈x⌉": {
+          result = Math.ceil(val);
+          fn = `⌈${val}⌉`;
+          break;
+        }
+        case "⌊x⌋": {
+          result = Math.floor(val);
+          fn = `⌊${val}⌋`;
+          break;
+        }
+        case "rand": {
+          result = Math.random();
+          fn = `rand`;
+          break;
+        }
+        case "→dms": {
+          const input = this.expression ? eval(this.expression) : 0;
+          const degrees = Math.floor(input);
+          const minutesFloat = (input - degrees) * 60;
+          const minutes = Math.floor(minutesFloat);
+          const seconds = ((minutesFloat - minutes) * 60).toFixed(2);
+
+          result = `${degrees}° ${minutes}' ${seconds}"`;
+          fn = `dms(${input})`;
+          break;
+        }
+        case "x³": {
+          result = val ** 3;
+          fn = `${val}³`;
+          break;
+        }
+        case "³√x":
+          result = Math.cbrt(val);
+          fn = `³√${val}`;
+          break;
+        case "ʸ√x": {
+          // Store current base (x)
+          const base = this.expression ? eval(this.expression) : 0;
+          this.memoryValue = base; // temporarily hold base
+
+          // Reset expression to accept new y input (root degree)
+          this.expression = "";
+          this.fn = `ʸ√(${base}, ?)`;
+          this.updateDisplay(`ʸ√(${base}, )`);
+          return;
+        }
+        case "2ˣ":
+          this.expression = this.expression ? this.expression + "**2" : "2**";
+          this.updateDisplay(this.expression);
+          return;
+        case "eˣ":
+          this.expression = this.expression
+            ? this.expression + `**${Math.E}`
+            : `${Math.E}**`;
+          this.updateDisplay(this.expression);
+          return;
+        case "logᵤx": {
+          const input = this.expression ? eval(this.expression) : 0;
+
+          if (this.memoryFunction === "logᵤx") {
+            // Second step: user has entered base u
+            const u = input;
+            const x = this.memoryValue;
+            if (x <= 0 || u <= 0 || u === 1)
+              throw Error("Invalid input for logᵤx");
+            result = Math.log(x) / Math.log(u);
+            fn = `log base ${u} of ${x}`;
+            delete this.memoryFunction;
+            delete this.memoryValue;
+          } else {
+            // First step: user enters x
+            this.memoryFunction = "logᵤx";
+            this.memoryValue = input;
+            this.expression = "";
+            this.fn = `logᵤ(${input}, ?)`;
+            this.updateDisplay(`logᵤ(${input}, )`);
+            return;
           }
           break;
+        }
+
         default:
           return;
       }
-      if (!this.isChangeNames) {
-        console.log(this.expression);
-        this.updateHistory(`${fn} =`);
-        this.expression = result.toString();
-        this.lastResult = this.expression;
-        this.updateDisplay(this.expression);
-        this.ansShown = true;
-        this.isChangeNames = false;
-      }
+
+      // if (!this.isChangeNames) {
+      this.updateHistory(`${fn} =`);
+      this.expression = result.toString();
+      this.lastResult = this.expression;
+      this.updateDisplay(this.expression);
+      this.ansShown = true;
+      this.isChangeNames = false;
+      // }
     } catch (e) {
       this.updateHistory("ERROR");
       this.expression = "";
@@ -215,9 +364,7 @@ class Calculator {
 
   compute() {
     try {
-      console.log(this.expression);
       const result = eval(this.expression);
-      console.log(result);
       this.updateHistory(`${this.expression} = `);
       this.expression = result;
       this.lastResult = this.expression;
@@ -260,6 +407,10 @@ class Calculator {
       if (this.expression.slice(-1) === "*") this.expression += "1";
       this.compute();
     } else if (btn.classList.contains("changeNames")) {
+      this.applyFunction(text);
+    } else if (btn.classList.contains("DEG")) {
+      this.applyFunction(text);
+    } else if (btn.classList.contains("popup-btn")) {
       this.applyFunction(text);
     }
   }
