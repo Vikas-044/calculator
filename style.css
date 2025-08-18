@@ -20,7 +20,7 @@ body {
 }
 
 .calculator {
-  width: 600px;
+  width: 700px;
   height: 800px;
   background-color: #ffffff;
   border-radius: 10px;
@@ -35,34 +35,84 @@ body {
   background-color: #f9fcff;
   border: 2px solid lightgray;
   border-radius: 20px;
-  padding: 10px;
+  padding: 10 0 10 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-end;
-  height: 130px;
+  height: 140px;
+  position: relative;
+  font-size: 20px;
 }
 
 .history {
   background-color: transparent;
   padding: 5px;
+  text-align: right;
+  max-height: 40px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  font-size: 10px;
+}
+
+.history::-webkit-scrollbar {
+  display: none;
 }
 
 .history-item-text {
-  font-size: 20px;
+  font-size: 15px;
   color: gray;
   font-family: "DM Mono", monospace;
 }
 
 .display input {
-  width: 100%;
+  width: calc(100% - 20px); /* Adjusted to prevent overlap with memory */
   border: none;
   outline: none;
-  font-size: 40px;
-  padding-top: 10px;
+  font-size: 20px; /* Reduced base font size for better fit */
+  padding: 10px;
   text-align: right;
   background-color: transparent;
   color: black;
+  font-family: "DM Mono", monospace;
+  box-sizing: border-box;
+  transition: font-size 0.2s ease;
+}
+
+/* Dynamic font size based on input length */
+.display input[value*="........"] {
+  font-size: 32px; /* 8+ characters */
+}
+.display input[value*="............"] {
+  font-size: 28px; /* 12+ characters */
+}
+.display input[value*="................"] {
+  font-size: 24px; /* 16+ characters */
+}
+.display input[value*="...................."] {
+  font-size: 20px; /* 20+ characters */
+}
+.display input[value*="........................"] {
+  font-size: 18px; /* 24+ characters */
+}
+.display input[value*="............................"] {
+  font-size: 16px; /* 28+ characters */
+}
+.display input[value*="................................"] {
+  font-size: 14px; /* 32 characters */
+}
+
+.memory-item {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  z-index: 1;
+}
+
+.memory-item-text {
+  font-size: 18px;
+  color: #666;
   font-family: "DM Mono", monospace;
 }
 
@@ -118,15 +168,14 @@ body {
   grid-column: span 2;
 }
 
-/*  Pop-up style   */
-
+/* 🔳 Pop-up style */
 .popup-panel {
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(3, auto); /* 3 buttons per row */
+  grid-template-columns: repeat(3, auto);
   gap: 10px;
   padding: 14px;
-  background-color: #1c1c1e; /* Dark elegant black */
+  background-color: #1c1c1e;
   border: 1px solid #333;
   border-radius: 14px;
   z-index: 10;
@@ -158,4 +207,9 @@ body {
 
 .hidden {
   display: none;
+}
+
+#display {
+  margin-bottom: 30px;
+  padding-right: 0;
 }

@@ -58,10 +58,11 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 class Calculator {
-  constructor(displayEl, historyEl) {
+  constructor(displayEl, historyEl, memoryDisplayEl) {
     this.displayEl = displayEl;
     this.historyEl = historyEl;
-    this.expression = "";
+    this.memoryDisplayEl = memoryDisplayEl;
+    this.expression = "0";
     this.lastResult = "";
     this.ansShown = false;
     this.isChangeNames = false;
@@ -72,20 +73,43 @@ class Calculator {
     this.changeBtnName = document.querySelectorAll(".special");
     this.changeDegName = document.querySelector(".DEG");
     this.isRad = false;
+    this.logBaseMode = false;
+    this.rootBaseMode = false;
+    this.isDec = false;
+    this.memoryVal = "";
+    this.tempExpression = "";
   }
 
   updateDisplay(text = "") {
+    if (text.length > 32) return;
     this.displayEl.value = text;
   }
+
   updateHistory(text = "") {
     this.historyEl.textContent = text;
   }
 
+  updateMemory(text = "") {
+    this.memoryDisplayEl.textContent = text;
+  }
+
+  getSafeExpression() {
+    return this.expression === "" ? "0" : this.expression;
+  }
+
   append(char) {
+    if (this.ansShown) {
+      this.updateHistory(`Ans = ${this.expression}`);
+      this.expression = "";
+      this.ansShown = false;
+    }
+
     const last = this.expression.slice(-1);
+
     if (/[+\-*/^\.]/.test(last) && /[+\-*/^\.]/.test(char)) {
       if (char !== last) {
         this.expression = this.expression.slice(0, -1) + char;
+        if (char === "." && this.expression.includes(".")) return;
         this.updateDisplay(this.expression);
         return;
       }
@@ -93,12 +117,23 @@ class Calculator {
     }
 
     if (char === "." && /\.\d*$/.test(this.expression)) return;
-    if (char === "0" && this.displayEl.value === "") return;
+    if (char === "0" && this.displayEl.value === "0") return;
+    if (char === "." && this.displayEl.value === "") this.expression += "0";
+
+    if (this.logBaseMode) {
+      this.tempExpression += char;
+      this.updateDisplay(`log(${this.memoryValue}, ${this.tempExpression})`);
+      return;
+    }
+
+    if (this.rootBaseMode) {
+      this.tempExpression += char;
+      this.updateDisplay(`ʸ√(${this.memoryValue}, ${this.tempExpression})`);
+      return;
+    }
 
     if (char === "(") {
-      if (/[0-9%)πe]$/.test(last)) {
-        this.expression += "*";
-      }
+      if (/[0-9%)πe]$/.test(last)) this.expression += "*";
       this.expression += "(";
     } else if (char === ")") {
       const openCount = (this.expression.match(/\(/g) || []).length;
@@ -142,17 +177,17 @@ class Calculator {
   applyFunction(func) {
     try {
       let fn;
-      const val = this.expression
-        ? eval(this.expression)
-        : eval(this.lastResult);
+      const safeExpr = this.getSafeExpression();
+      const val = eval(safeExpr);
       let result;
+
       switch (func) {
         case "±":
           result = -val;
           fn = "";
           break;
         case "%":
-          this.updateDisplay(`${this.expression}%`);
+          this.updateDisplay(`${safeExpr}%`);
           this.expression = `${val} * 0.01 *`;
           return;
         case "x²":
@@ -164,13 +199,13 @@ class Calculator {
           fn = `1/${val}`;
           break;
         case "xʸ":
-          this.updateDisplay(`${this.expression}^`);
+          this.updateDisplay(`${safeExpr}^`);
           this.expression += "**";
           return;
         case "10ˣ":
-          this.expression = this.expression ? this.expression + "**10" : "10**";
-          this.updateDisplay(this.expression);
-          return;
+          result = 10 ** val;
+          fn = `10^${val}`;
+          break;
         case "|x|":
           result = Math.abs(val);
           fn = `|${val}|`;
@@ -202,159 +237,123 @@ class Calculator {
           break;
         case "2ⁿᵈ":
           this.isChangeNames = true;
-          if (this.changeBtnName[0].textContent === "x²") {
-            this.changeBtnName.forEach(
-              (btn, i) => (btn.textContent = this.newBtnName[i])
-            );
-          } else {
-            this.changeBtnName.forEach(
-              (btn, i) => (btn.textContent = this.oldBtnName[i])
-            );
-          }
+          const btnText = this.changeBtnName[0].textContent;
+          const swap = btnText === "x²" ? this.newBtnName : this.oldBtnName;
+          this.changeBtnName.forEach((btn, i) => (btn.textContent = swap[i]));
           return;
         case "DEG":
-          this.changeDegName.textContent = "RAD";
-          this.isRad = true;
-          break;
         case "RAD":
-          this.changeDegName.textContent = "DEG";
-          this.isRad = false;
-          break;
-        case "sin": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.sin(angle);
-          fn = this.isRad ? `sin(${input}ᶜ)` : `sin(${input}°)`;
-          break;
-        }
-        case "cos": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.cos(angle);
-          fn = this.isRad ? `cos(${input}ᶜ)` : `cos(${input}°)`;
-          break;
-        }
-        case "tan": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.tan(angle);
-          fn = this.isRad ? `tan(${input}ᶜ)` : `tan(${input}°)`;
-          break;
-        }
-        case "sinh": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.sinh(angle);
-          fn = this.isRad ? `sinh(${input}ᶜ)` : `sinh(${input}°)`;
-          break;
-        }
-        case "cosh": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.cosh(angle);
-          fn = this.isRad ? `cosh(${input}ᶜ)` : `cosh(${input}°)`;
-          break;
-        }
+          this.isRad = !this.isRad;
+          this.changeDegName.textContent = this.isRad ? "RAD" : "DEG";
+          return;
+        case "sin":
+        case "cos":
+        case "tan":
+        case "sinh":
+        case "cosh":
         case "tanh": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const angle = this.isRad ? input : this.toRadians(input);
-          result = Math.tanh(angle);
-          fn = this.isRad ? `tanh(${input}ᶜ)` : `tanh(${input}°)`;
+          const angle = this.isRad ? val : this.toRadians(val);
+          result = Math[func](angle);
+          fn = `${func}(${val}${this.isRad ? "ᶜ" : "°"})`;
           break;
         }
-        case "⌈x⌉": {
+        case "⌈x⌉":
           result = Math.ceil(val);
           fn = `⌈${val}⌉`;
           break;
-        }
-        case "⌊x⌋": {
+        case "⌊x⌋":
           result = Math.floor(val);
           fn = `⌊${val}⌋`;
           break;
-        }
-        case "rand": {
+        case "rand":
           result = Math.random();
           fn = `rand`;
           break;
-        }
         case "→dms": {
-          const input = this.expression ? eval(this.expression) : 0;
-          const degrees = Math.floor(input);
-          const minutesFloat = (input - degrees) * 60;
+          const degrees = Math.floor(val);
+          const minutesFloat = (val - degrees) * 60;
           const minutes = Math.floor(minutesFloat);
           const seconds = ((minutesFloat - minutes) * 60).toFixed(2);
-
           result = `${degrees}° ${minutes}' ${seconds}"`;
-          fn = `dms(${input})`;
+          fn = `dms(${val})`;
           break;
         }
-        case "x³": {
+        case "x³":
           result = val ** 3;
           fn = `${val}³`;
           break;
-        }
         case "³√x":
           result = Math.cbrt(val);
           fn = `³√${val}`;
           break;
-        case "ʸ√x": {
-          // Store current base (x)
-          const base = this.expression ? eval(this.expression) : 0;
-          this.memoryValue = base; // temporarily hold base
-
-          // Reset expression to accept new y input (root degree)
+        case "ʸ√x":
+          this.memoryValue = val;
           this.expression = "";
-          this.fn = `ʸ√(${base}, ?)`;
-          this.updateDisplay(`ʸ√(${base}, )`);
+          this.tempExpression = "";
+          this.fn = `ʸ√(${val}, ?)`;
+          this.updateDisplay(`ʸ√(${val}, )`);
+          this.rootBaseMode = true;
           return;
-        }
         case "2ˣ":
-          this.expression = this.expression ? this.expression + "**2" : "2**";
-          this.updateDisplay(this.expression);
-          return;
-        case "eˣ":
-          this.expression = this.expression
-            ? this.expression + `**${Math.E}`
-            : `${Math.E}**`;
-          this.updateDisplay(this.expression);
-          return;
-        case "logᵤx": {
-          const input = this.expression ? eval(this.expression) : 0;
-
-          if (this.memoryFunction === "logᵤx") {
-            // Second step: user has entered base u
-            const u = input;
-            const x = this.memoryValue;
-            if (x <= 0 || u <= 0 || u === 1)
-              throw Error("Invalid input for logᵤx");
-            result = Math.log(x) / Math.log(u);
-            fn = `log base ${u} of ${x}`;
-            delete this.memoryFunction;
-            delete this.memoryValue;
-          } else {
-            // First step: user enters x
-            this.memoryFunction = "logᵤx";
-            this.memoryValue = input;
-            this.expression = "";
-            this.fn = `logᵤ(${input}, ?)`;
-            this.updateDisplay(`logᵤ(${input}, )`);
-            return;
-          }
+          result = 2 ** val;
+          fn = `2^${val}`;
           break;
-        }
-
+        case "eˣ":
+          this.expression = `${Math.E}**`;
+          this.updateDisplay(this.expression);
+          return;
+        case "logᵤx":
+          this.memoryValue = val;
+          this.expression = "";
+          this.tempExpression = "";
+          this.fn = `log(${val}, ?)`;
+          this.updateDisplay(`log(${val}, )`);
+          this.logBaseMode = true;
+          return;
+        case "F-E":
+          const disContent = Number(this.displayEl.value);
+          const newDisplay = this.isDec
+            ? disContent.toExponential()
+            : disContent;
+          this.isDec = !this.isDec;
+          this.updateDisplay(newDisplay.toString());
+          return;
+        case "MC":
+          this.memoryVal = "0";
+          this.updateMemory(this.memoryVal);
+          return;
+        case "MR":
+          this.updateDisplay(this.memoryVal);
+          return;
+        case "M+":
+          if (isFinite(this.displayEl.value))
+            this.memoryVal = (
+              Number(this.memoryVal) + Number(this.displayEl.value)
+            ).toString();
+          this.updateMemory(this.memoryVal);
+          return;
+        case "M-":
+          if (isFinite(this.displayEl.value))
+            this.memoryVal = (
+              Number(this.memoryVal) - Number(this.displayEl.value)
+            ).toString();
+          this.updateMemory(this.memoryVal);
+          return;
+        case "MS":
+          if (isFinite(this.displayEl.value))
+            this.memoryVal = this.displayEl.value;
+          this.updateMemory(this.memoryVal);
+          return;
         default:
           return;
       }
 
-      // if (!this.isChangeNames) {
       this.updateHistory(`${fn} =`);
       this.expression = result.toString();
       this.lastResult = this.expression;
       this.updateDisplay(this.expression);
       this.ansShown = true;
       this.isChangeNames = false;
-      // }
     } catch (e) {
       this.updateHistory("ERROR");
       this.expression = "";
@@ -364,11 +363,30 @@ class Calculator {
 
   compute() {
     try {
-      const result = eval(this.expression);
-      this.updateHistory(`${this.expression} = `);
-      this.expression = result;
+      const expr = this.getSafeExpression();
+      let result;
+      if (this.logBaseMode) {
+        result =
+          Math.log(Number(this.tempExpression)) /
+          Math.log(Number(this.memoryValue));
+        this.updateHistory(
+          `log(${this.memoryValue}, ${this.tempExpression}) =`
+        );
+        this.logBaseMode = false;
+      } else if (this.rootBaseMode) {
+        result = Number(this.tempExpression) ** (1 / Number(this.memoryValue));
+        this.updateHistory(`ʸ√(${this.memoryValue}, ${this.tempExpression}) =`);
+        this.rootBaseMode = false;
+      } else {
+        if (expr.includes("/0") || expr.includes("/(0"))
+          throw new Error("Cannot Divide By Zero");
+        result = eval(expr);
+        this.updateHistory(`${expr} =`);
+      }
+      this.expression = result.toString();
       this.lastResult = this.expression;
       this.updateDisplay(this.expression);
+      this.tempExpression = "";
       this.ansShown = true;
     } catch (e) {
       this.updateHistory("ERROR");
@@ -379,38 +397,28 @@ class Calculator {
 
   handleButton(btn) {
     const text = btn.textContent;
-    if (btn.classList.contains("digits") || text === ".") {
-      if (this.ansShown) {
-        this.updateHistory(`Ans = ${this.expression}`);
-        this.expression = "";
-        this.ansShown = false;
-      }
-      this.append(text);
-    } else if (btn.classList.contains("operator")) {
-      if (this.ansShown) {
-        this.expression = this.displayEl.value;
-        this.ansShown = false;
-      }
-      this.append(text);
-    } else if (btn.classList.contains("func")) {
-      this.applyFunction(text);
-    } else if (btn.classList.contains("clear-one")) {
+    if (btn.classList.contains("digits") || text === ".") this.append(text);
+    else if (btn.classList.contains("operator")) this.append(text);
+    else if (btn.classList.contains("func")) this.applyFunction(text);
+    else if (btn.classList.contains("clear-one")) {
       this.expression = this.expression.slice(0, -1);
-      this.updateDisplay(this.expression);
+      this.updateDisplay(this.expression || "0");
     } else if (btn.classList.contains("clear-all")) {
       this.ansShown = false;
       this.expression = "";
       this.lastResult = "";
-      this.updateDisplay(this.expression);
+      this.updateDisplay("0");
       this.updateHistory("ALL CLEARED");
     } else if (btn.classList.contains("equal")) {
       if (this.expression.slice(-1) === "*") this.expression += "1";
       this.compute();
-    } else if (btn.classList.contains("changeNames")) {
-      this.applyFunction(text);
-    } else if (btn.classList.contains("DEG")) {
-      this.applyFunction(text);
-    } else if (btn.classList.contains("popup-btn")) {
+    } else if (
+      btn.classList.contains("changeNames") ||
+      btn.classList.contains("DEG") ||
+      btn.classList.contains("popup-btn") ||
+      btn.classList.contains("F-E") ||
+      btn.classList.contains("memory")
+    ) {
       this.applyFunction(text);
     }
   }
@@ -430,15 +438,15 @@ class Calculator {
       ")": ")",
     };
     if (keyMap[e.key]) {
-      if (keyMap[e.key].includes("equal")) this.compute();
-      else if (keyMap[e.key].includes("clear-one"))
-        (this.expression = this.expression.slice(0, -1)),
-          this.updateDisplay(this.expression);
-      else if (keyMap[e.key].includes("clear-all"))
-        (this.expression = ""),
-          this.updateDisplay(""),
-          this.updateHistory("ALL CLEARED");
-      else this.append(keyMap[e.key]);
+      if (keyMap[e.key] === "equal") this.compute();
+      else if (keyMap[e.key] === "clear-one") {
+        this.expression = this.expression.slice(0, -1);
+        this.updateDisplay(this.expression || "0");
+      } else if (keyMap[e.key] === "clear-all") {
+        this.expression = "0";
+        this.updateDisplay("0");
+        this.updateHistory("ALL CLEARED");
+      } else this.append(keyMap[e.key]);
       e.preventDefault();
     } else if (/\d/.test(e.key)) this.append(e.key), e.preventDefault();
   }
@@ -447,7 +455,8 @@ class Calculator {
 window.addEventListener("DOMContentLoaded", () => {
   const display = document.getElementById("display");
   const history = document.querySelector(".history-item-text");
-  const calc = new Calculator(display, history);
+  const memoryDisplayEl = document.querySelector(".memory-item-text");
+  const calc = new Calculator(display, history, memoryDisplayEl);
   document
     .querySelectorAll(".button")
     .forEach((btn) =>
